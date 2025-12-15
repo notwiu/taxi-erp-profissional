@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motoristas | TaxiControl PRO</title>
+    <link rel="stylesheet" href="/back/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-taxi"></i>
+                <h2>TaxiControl<span>PRO</span></h2>
+            </div>
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <h3>Administrador</h3>
+                    <p>Supervisor Geral</p>
+                </div>
+            </div>
+            
+            <ul class="menu-items">
+                <li class="menu-item">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="corridas.html">
+                        <i class="fas fa-route"></i>
+                        <span>Corridas</span>
+                        <span class="badge">12</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="motoristas.html">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Motoristas</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="veiculos.html">
+                        <i class="fas fa-car"></i>
+                        <span>Veículos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="financeiro.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Financeiro</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#"><i class="fas fa-users-cog"></i> Usuários</a></li>
+                        <li><a href="#"><i class="fas fa-percentage"></i> Comissões</a></li>
+                        <li><a href="#"><i class="fas fa-gas-pump"></i> Combustível</a></li>
+                        <li><a href="#"><i class="fas fa-tools"></i> Manutenção</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>Sistema Online</span>
+                </div>
+                <button class="btn-logout" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 class="page-title">Gestão de Motoristas</h1>
+                <nav class="breadcrumb">
+                    <a href="dashboard.html">Home</a> / <span>Motoristas</span>
+                </nav>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+                <div class="date-time">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-bar-left">
+                <button class="btn-primary" onclick="showNewDriverModal()">
+                    <i class="fas fa-user-plus"></i> Novo Motorista
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+            <div class="action-bar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar motorista..." id="search-drivers">
+                </div>
+            </div>
+        </div>
+
+        <!-- Drivers Stats -->
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Motoristas</h3>
+                    <p class="stat-value">28</p>
+                    <p class="stat-change">
+                        22 ativos / 6 inativos
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Ativos Hoje</h3>
+                    <p class="stat-value">22</p>
+                    <p class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 3% vs ontem
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Comissões a Pagar</h3>
+                    <p class="stat-value">R$ 8.245,00</p>
+                    <p class="stat-change">
+                        Vence em 5 dias
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card info">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Melhor Motorista</h3>
+                    <p class="stat-value">João Silva</p>
+                    <p class="stat-change">
+                        R$ 2.850,00 em vendas
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drivers Grid -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> Lista de Motoristas</h3>
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-toggle-btn" data-view="table">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="drivers-grid" id="drivers-view">
+                    <!-- Driver Card 1 -->
+                    <div class="driver-card">
+                        <div class="driver-card-header">
+                            <div class="driver-avatar large">
+                                <span>JS</span>
+                            </div>
+                            <div class="driver-status active"></div>
+                        </div>
+                        
+                        <div class="driver-card-body">
+                            <h3>João Silva</h3>
+                            <p class="driver-info">
+                                <i class="fas fa-id-card"></i> CPF: 123.456.789-00
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-phone"></i> (11) 98765-4321
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-envelope"></i> joao@email.com
+                            </p>
+                            
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-label">Corridas Hoje</span>
+                                    <span class="stat-value success">12</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-label">Faturamento</span>
+                                    <span class="stat-value">R$ 450,00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="driver-vehicle">
+                                <i class="fas fa-car"></i>
+                                <span>ABC-1234 (Corolla)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="driver-card-footer">
+                            <button class="driver-action-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Comissões">
+                                <i class="fas fa-percentage"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Histórico">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="driver-action-btn danger" title="Desativar">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Driver Card 2 -->
+                    <div class="driver-card">
+                        <div class="driver-card-header">
+                            <div class="driver-avatar large" style="background: #2ed573;">
+                                <span>MS</span>
+                            </div>
+                            <div class="driver-status active"></div>
+                        </div>
+                        
+                        <div class="driver-card-body">
+                            <h3>Maria Santos</h3>
+                            <p class="driver-info">
+                                <i class="fas fa-id-card"></i> CPF: 234.567.890-11
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-phone"></i> (11) 97654-3210
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-envelope"></i> maria@email.com
+                            </p>
+                            
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-label">Corridas Hoje</span>
+                                    <span class="stat-value success">10</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-label">Faturamento</span>
+                                    <span class="stat-value">R$ 380,00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="driver-vehicle">
+                                <i class="fas fa-car"></i>
+                                <span>DEF-5678 (Civic)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="driver-card-footer">
+                            <button class="driver-action-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Comissões">
+                                <i class="fas fa-percentage"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Histórico">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="driver-action-btn danger" title="Desativar">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Driver Card 3 -->
+                    <div class="driver-card">
+                        <div class="driver-card-header">
+                            <div class="driver-avatar large" style="background: #ff9f43;">
+                                <span>CO</span>
+                            </div>
+                            <div class="driver-status active"></div>
+                        </div>
+                        
+                        <div class="driver-card-body">
+                            <h3>Carlos Oliveira</h3>
+                            <p class="driver-info">
+                                <i class="fas fa-id-card"></i> CPF: 345.678.901-22
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-phone"></i> (11) 96543-2109
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-envelope"></i> carlos@email.com
+                            </p>
+                            
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-label">Corridas Hoje</span>
+                                    <span class="stat-value success">8</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-label">Faturamento</span>
+                                    <span class="stat-value">R$ 320,00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="driver-vehicle">
+                                <i class="fas fa-car"></i>
+                                <span>GHI-9012 (Onix)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="driver-card-footer">
+                            <button class="driver-action-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Comissões">
+                                <i class="fas fa-percentage"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Histórico">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="driver-action-btn danger" title="Desativar">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Driver Card 4 -->
+                    <div class="driver-card">
+                        <div class="driver-card-header">
+                            <div class="driver-avatar large" style="background: #1e90ff;">
+                                <span>PC</span>
+                            </div>
+                            <div class="driver-status active"></div>
+                        </div>
+                        
+                        <div class="driver-card-body">
+                            <h3>Pedro Costa</h3>
+                            <p class="driver-info">
+                                <i class="fas fa-id-card"></i> CPF: 456.789.012-33
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-phone"></i> (11) 95432-1098
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-envelope"></i> pedro@email.com
+                            </p>
+                            
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-label">Corridas Hoje</span>
+                                    <span class="stat-value success">7</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-label">Faturamento</span>
+                                    <span class="stat-value">R$ 280,00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="driver-vehicle">
+                                <i class="fas fa-car"></i>
+                                <span>JKL-3456 (Voyage)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="driver-card-footer">
+                            <button class="driver-action-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Comissões">
+                                <i class="fas fa-percentage"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Histórico">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="driver-action-btn danger" title="Desativar">
+                                <i class="fas fa-user-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Driver Card 5 (Inativo) -->
+                    <div class="driver-card inactive">
+                        <div class="driver-card-header">
+                            <div class="driver-avatar large" style="background: #7f8c8d;">
+                                <span>ML</span>
+                            </div>
+                            <div class="driver-status inactive"></div>
+                        </div>
+                        
+                        <div class="driver-card-body">
+                            <h3>Marcos Lima</h3>
+                            <p class="driver-info">
+                                <i class="fas fa-id-card"></i> CPF: 567.890.123-44
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-phone"></i> (11) 94321-0987
+                            </p>
+                            <p class="driver-info">
+                                <i class="fas fa-envelope"></i> marcos@email.com
+                            </p>
+                            
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-label">Última Corrida</span>
+                                    <span class="stat-value">5 dias</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-label">Status</span>
+                                    <span class="stat-value danger">Inativo</span>
+                                </div>
+                            </div>
+                            
+                            <div class="driver-vehicle">
+                                <i class="fas fa-car"></i>
+                                <span>Sem veículo</span>
+                            </div>
+                        </div>
+                        
+                        <div class="driver-card-footer">
+                            <button class="driver-action-btn" title="Reativar">
+                                <i class="fas fa-user-check"></i>
+                            </button>
+                            <button class="driver-action-btn" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="driver-action-btn danger" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Add Driver Card -->
+                    <div class="driver-card add-driver" onclick="showNewDriverModal()">
+                        <div class="add-driver-content">
+                            <i class="fas fa-user-plus"></i>
+                            <h3>Adicionar Motorista</h3>
+                            <p>Clique para cadastrar um novo motorista</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>TaxiControl PRO v2.1.0 | Sistema ERP para Gestão de Frota de Táxis</p>
+            <p>© 2024 Todos os direitos reservados</p>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/back/script.js"></script>
+    <script>
+        // Função para mostrar modal de novo motorista
+        function showNewDriverModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-user-plus"></i> Novo Motorista</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="new-driver-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Nome Completo</label>
+                                    <input type="text" placeholder="Nome do motorista" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card"></i> CPF</label>
+                                    <input type="text" placeholder="000.000.000-00" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Telefone</label>
+                                    <input type="tel" placeholder="(00) 00000-0000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope"></i> E-mail</label>
+                                    <input type="email" placeholder="email@exemplo.com" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+                                    <input type="text" placeholder="Endereço completo">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt"></i> Data de Nascimento</label>
+                                    <input type="date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-percentage"></i> Comissão (%)</label>
+                                    <input type="number" step="0.01" placeholder="30" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-car"></i> Veículo Atribuído</label>
+                                    <select>
+                                        <option value="">Sem veículo atribuído</option>
+                                        <option value="1">ABC-1234 (Toyota Corolla)</option>
+                                        <option value="2">DEF-5678 (Honda Civic)</option>
+                                        <option value="3">GHI-9012 (Chevrolet Onix)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-sticky-note"></i> Observações</label>
+                                <textarea placeholder="Observações adicionais..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox" checked>
+                                    <span>Motorista ativo imediatamente</span>
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                        <button class="btn-primary" onclick="saveNewDriver()">
+                            <i class="fas fa-save"></i> Salvar Motorista
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Fechar modal
+            modal.querySelector('.modal-close').addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+        }
+
+        // Salvar novo motorista
+        function saveNewDriver() {
+            const form = document.getElementById('new-driver-form');
+            if (form.checkValidity()) {
+                const loading = showLoading('Salvando motorista...');
+                
+                setTimeout(() => {
+                    loading.hide();
+                    closeModal();
+                    showAlert('Motorista cadastrado com sucesso!', 'success');
+                }, 1500);
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Adicionar estilos para os cards de motoristas
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .drivers-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 25px;
+                }
+                
+                .driver-card {
+                    background: white;
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow-sm);
+                    overflow: hidden;
+                    transition: var(--transition);
+                    border: 2px solid transparent;
+                }
+                
+                .driver-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: var(--shadow-md);
+                    border-color: var(--primary-color);
+                }
+                
+                .driver-card.inactive {
+                    opacity: 0.7;
+                }
+                
+                .driver-card-header {
+                    padding: 25px 25px 0;
+                    position: relative;
+                }
+                
+                .driver-avatar.large {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: var(--primary-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    margin-bottom: 15px;
+                }
+                
+                .driver-status {
+                    position: absolute;
+                    top: 25px;
+                    right: 25px;
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                }
+                
+                .driver-status.active {
+                    background: var(--success-color);
+                    box-shadow: 0 0 10px var(--success-color);
+                }
+                
+                .driver-status.inactive {
+                    background: var(--gray-light);
+                }
+                
+                .driver-card-body {
+                    padding: 0 25px 25px;
+                }
+                
+                .driver-card-body h3 {
+                    font-size: 1.3rem;
+                    margin-bottom: 15px;
+                    color: var(--dark-color);
+                }
+                
+                .driver-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                    color: var(--gray-color);
+                    font-size: 0.9rem;
+                }
+                
+                .driver-info i {
+                    width: 20px;
+                    color: var(--primary-color);
+                }
+                
+                .driver-stats {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 15px;
+                    margin: 20px 0;
+                    padding: 15px;
+                    background: var(--light-gray);
+                    border-radius: var(--border-radius-sm);
+                }
+                
+                .driver-stat {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+                
+                .stat-label {
+                    font-size: 0.8rem;
+                    color: var(--gray-color);
+                }
+                
+                .stat-value {
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--dark-color);
+                }
+                
+                .stat-value.success {
+                    color: var(--success-color);
+                }
+                
+                .stat-value.danger {
+                    color: var(--danger-color);
+                }
+                
+                .driver-vehicle {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 12px;
+                    background: rgba(45, 91, 227, 0.1);
+                    border-radius: var(--border-radius-sm);
+                    color: var(--primary-color);
+                    font-weight: 500;
+                }
+                
+                .driver-card-footer {
+                    padding: 15px 25px;
+                    background: var(--light-gray);
+                    border-top: 1px solid #dee2e6;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                
+                .driver-action-btn {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 8px;
+                    border: none;
+                    background: white;
+                    color: var(--dark-color);
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: var(--transition);
+                }
+                
+                .driver-action-btn:hover {
+                    background: var(--primary-color);
+                    color: white;
+                }
+                
+                .driver-action-btn.danger:hover {
+                    background: var(--danger-color);
+                }
+                
+                .add-driver {
+                    border: 2px dashed var(--light-gray);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+                
+                .add-driver:hover {
+                    border-color: var(--primary-color);
+                    background: rgba(45, 91, 227, 0.05);
+                }
+                
+                .add-driver-content {
+                    text-align: center;
+                    padding: 40px;
+                }
+                
+                .add-driver-content i {
+                    font-size: 3rem;
+                    color: var(--primary-color);
+                    margin-bottom: 20px;
+                }
+                
+                .add-driver-content h3 {
+                    margin-bottom: 10px;
+                    color: var(--dark-color);
+                }
+                
+                .add-driver-content p {
+                    color: var(--gray-color);
+                }
+                
+                .view-toggle {
+                    display: flex;
+                    gap: 10px;
+                }
+                
+                .view-toggle-btn {
+                    width: 40px;
+                    height: 40px;
+                    border: 2px solid var(--light-gray);
+                    background: white;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: var(--transition);
+                }
+                
+                .view-toggle-btn.active {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                }
+                
+                .view-toggle-btn:hover {
+                    border-color: var(--primary-color);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Toggle entre grid e table view
+            const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+            const driversView = document.getElementById('drivers-view');
+            
+            viewToggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewToggleBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.view === 'table') {
+                        driversView.classList.add('table-view');
+                    } else {
+                        driversView.classList.remove('table-view');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

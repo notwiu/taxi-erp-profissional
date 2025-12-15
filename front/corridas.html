@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corridas | TaxiControl PRO</title>
+    <link rel="stylesheet" href="/back/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-taxi"></i>
+                <h2>TaxiControl<span>PRO</span></h2>
+            </div>
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <h3>Administrador</h3>
+                    <p>Supervisor Geral</p>
+                </div>
+            </div>
+            
+            <ul class="menu-items">
+                <li class="menu-item">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="corridas.html">
+                        <i class="fas fa-route"></i>
+                        <span>Corridas</span>
+                        <span class="badge">12</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="motoristas.html">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Motoristas</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="veiculos.html">
+                        <i class="fas fa-car"></i>
+                        <span>Veículos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="financeiro.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Financeiro</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#"><i class="fas fa-users-cog"></i> Usuários</a></li>
+                        <li><a href="#"><i class="fas fa-percentage"></i> Comissões</a></li>
+                        <li><a href="#"><i class="fas fa-gas-pump"></i> Combustível</a></li>
+                        <li><a href="#"><i class="fas fa-tools"></i> Manutenção</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>Sistema Online</span>
+                </div>
+                <button class="btn-logout" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 class="page-title">Gestão de Corridas</h1>
+                <nav class="breadcrumb">
+                    <a href="dashboard.html">Home</a> / <span>Corridas</span>
+                </nav>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+                <div class="date-time">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-bar-left">
+                <button class="btn-primary" onclick="showNewRideModal()">
+                    <i class="fas fa-plus-circle"></i> Nova Corrida
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+            <div class="action-bar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar corrida..." id="search-rides">
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Faturamento Hoje</h3>
+                    <p class="stat-value">R$ 2.850,00</p>
+                    <p class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12% vs ontem
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Corridas Hoje</h3>
+                    <p class="stat-value">47</p>
+                    <p class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 8% vs ontem
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-road"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Km Rodados</h3>
+                    <p class="stat-value">1.245 km</p>
+                    <p class="stat-change">
+                        127 corridas
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card info">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Tempo Médio</h3>
+                    <p class="stat-value">18 min</p>
+                    <p class="stat-change">
+                        por corrida
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rides Table -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> Histórico de Corridas</h3>
+                <div class="table-actions">
+                    <select class="table-filter">
+                        <option value="all">Todas as corridas</option>
+                        <option value="today">Hoje</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mês</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th>ID</th>
+                                <th>Motorista</th>
+                                <th>Veículo</th>
+                                <th>Origem → Destino</th>
+                                <th>Distância</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Data/Hora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00128</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">JS</div>
+                                        <span>João Silva</span>
+                                    </div>
+                                </td>
+                                <td>ABC-1234</td>
+                                <td>Centro → Aeroporto</td>
+                                <td>25,5 km</td>
+                                <td class="amount success">R$ 45,00</td>
+                                <td><span class="status-badge completed">Concluída</span></td>
+                                <td>15:30 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00127</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">MS</div>
+                                        <span>Maria Santos</span>
+                                    </div>
+                                </td>
+                                <td>DEF-5678</td>
+                                <td>Shopping → Bairro Nova Vida</td>
+                                <td>18,2 km</td>
+                                <td class="amount success">R$ 32,50</td>
+                                <td><span class="status-badge completed">Concluída</span></td>
+                                <td>14:15 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00126</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">CO</div>
+                                        <span>Carlos Oliveira</span>
+                                    </div>
+                                </td>
+                                <td>GHI-9012</td>
+                                <td>Hospital → Centro</td>
+                                <td>12,8 km</td>
+                                <td class="amount success">R$ 28,00</td>
+                                <td><span class="status-badge completed">Concluída</span></td>
+                                <td>13:45 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00125</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">PC</div>
+                                        <span>Pedro Costa</span>
+                                    </div>
+                                </td>
+                                <td>JKL-3456</td>
+                                <td>Estação → Universidade</td>
+                                <td>8,5 km</td>
+                                <td class="amount success">R$ 19,50</td>
+                                <td><span class="status-badge completed">Concluída</span></td>
+                                <td>12:30 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00124</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">AP</div>
+                                        <span>Ana Pereira</span>
+                                    </div>
+                                </td>
+                                <td>MNO-7890</td>
+                                <td>Hotel → Shopping</td>
+                                <td>10,2 km</td>
+                                <td class="amount success">R$ 22,00</td>
+                                <td><span class="status-badge completed">Concluída</span></td>
+                                <td>11:15 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Em andamento -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00129</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">RS</div>
+                                        <span>Roberto Souza</span>
+                                    </div>
+                                </td>
+                                <td>PQR-1234</td>
+                                <td>Aeroporto → Centro</td>
+                                <td>25,5 km</td>
+                                <td class="amount warning">R$ 45,00</td>
+                                <td><span class="status-badge in-progress">Em andamento</span></td>
+                                <td>16:00 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Finalizar">
+                                            <i class="fas fa-flag-checkered"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Cancelada -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>#00123</td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar">ML</div>
+                                        <span>Marcos Lima</span>
+                                    </div>
+                                </td>
+                                <td>STU-5678</td>
+                                <td>Centro → Zona Sul</td>
+                                <td>15,3 km</td>
+                                <td class="amount danger">R$ 0,00</td>
+                                <td><span class="status-badge cancelled">Cancelada</span></td>
+                                <td>10:30 - 15/12/2024</td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Reativar">
+                                            <i class="fas fa-redo"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <span class="pagination-info">Mostrando 1-7 de 47 corridas</span>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn">3</button>
+                        <button class="pagination-btn">4</button>
+                        <span>...</span>
+                        <button class="pagination-btn">7</button>
+                        <button class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-size">
+                        <select>
+                            <option>10 por página</option>
+                            <option selected>25 por página</option>
+                            <option>50 por página</option>
+                            <option>100 por página</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>TaxiControl PRO v2.1.0 | Sistema ERP para Gestão de Frota de Táxis</p>
+            <p>© 2024 Todos os direitos reservados</p>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Função para mostrar modal de nova corrida
+        function showNewRideModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-route"></i> Nova Corrida</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="new-ride-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user-tie"></i> Motorista</label>
+                                    <select required>
+                                        <option value="">Selecione um motorista</option>
+                                        <option value="1">João Silva</option>
+                                        <option value="2">Maria Santos</option>
+                                        <option value="3">Carlos Oliveira</option>
+                                        <option value="4">Pedro Costa</option>
+                                        <option value="5">Ana Pereira</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-car"></i> Veículo</label>
+                                    <select required>
+                                        <option value="">Selecione um veículo</option>
+                                        <option value="1">ABC-1234 (Toyota Corolla)</option>
+                                        <option value="2">DEF-5678 (Honda Civic)</option>
+                                        <option value="3">GHI-9012 (Chevrolet Onix)</option>
+                                        <option value="4">JKL-3456 (VW Voyage)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt"></i> Origem</label>
+                                    <input type="text" placeholder="Local de partida" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt"></i> Destino</label>
+                                    <input type="text" placeholder="Local de destino" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-road"></i> Distância (km)</label>
+                                    <input type="number" step="0.1" placeholder="0.0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-money-bill-wave"></i> Valor (R$)</label>
+                                    <input type="number" step="0.01" placeholder="0.00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-clock"></i> Duração (min)</label>
+                                    <input type="number" placeholder="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-sticky-note"></i> Observações</label>
+                                <textarea placeholder="Observações adicionais..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                        <button class="btn-primary" onclick="saveNewRide()">
+                            <i class="fas fa-save"></i> Salvar Corrida
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Fechar modal
+            modal.querySelector('.modal-close').addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+        }
+
+        // Fechar modal
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.classList.add('fade-out');
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 300);
+            }
+        }
+
+        // Salvar nova corrida
+        function saveNewRide() {
+            const form = document.getElementById('new-ride-form');
+            if (form.checkValidity()) {
+                const loading = showLoading('Salvando corrida...');
+                
+                setTimeout(() => {
+                    loading.hide();
+                    closeModal();
+                    showAlert('Corrida cadastrada com sucesso!', 'success');
+                    
+                    // Aqui você adicionaria a lógica para salvar no banco de dados
+                }, 1500);
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Adicionar estilos para a tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .action-bar {
+                    padding: 20px 30px;
+                    background: white;
+                    margin: 0 30px 25px;
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow-sm);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .action-bar-left {
+                    display: flex;
+                    gap: 15px;
+                }
+                
+                .search-box {
+                    position: relative;
+                    width: 300px;
+                }
+                
+                .search-box i {
+                    position: absolute;
+                    left: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--gray-color);
+                }
+                
+                .search-box input {
+                    width: 100%;
+                    padding: 12px 15px 12px 45px;
+                    border: 2px solid var(--light-gray);
+                    border-radius: var(--border-radius-sm);
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 1rem;
+                }
+                
+                .search-box input:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                }
+                
+                .table-container {
+                    overflow-x: auto;
+                }
+                
+                .data-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                
+                .data-table th {
+                    background: var(--light-gray);
+                    padding: 15px;
+                    text-align: left;
+                    font-weight: 600;
+                    color: var(--dark-color);
+                    border-bottom: 2px solid #dee2e6;
+                }
+                
+                .data-table td {
+                    padding: 15px;
+                    border-bottom: 1px solid #eee;
+                }
+                
+                .data-table tr:hover {
+                    background: #f8f9fa;
+                }
+                
+                .driver-cell {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .driver-avatar {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    background: var(--primary-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                }
+                
+                .amount {
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                }
+                
+                .amount.success { color: var(--success-color); }
+                .amount.warning { color: var(--warning-color); }
+                .amount.danger { color: var(--danger-color); }
+                
+                .status-badge {
+                    padding: 5px 12px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                }
+                
+                .status-badge.completed {
+                    background: rgba(46, 213, 115, 0.1);
+                    color: var(--success-color);
+                }
+                
+                .status-badge.in-progress {
+                    background: rgba(255, 159, 67, 0.1);
+                    color: var(--warning-color);
+                }
+                
+                .status-badge.cancelled {
+                    background: rgba(255, 71, 87, 0.1);
+                    color: var(--danger-color);
+                }
+                
+                .table-actions-cell {
+                    display: flex;
+                    gap: 8px;
+                }
+                
+                .table-action-btn {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 6px;
+                    border: none;
+                    background: var(--light-gray);
+                    color: var(--dark-color);
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: var(--transition);
+                }
+                
+                .table-action-btn:hover {
+                    background: var(--primary-color);
+                    color: white;
+                }
+                
+                .table-action-btn.danger:hover {
+                    background: var(--danger-color);
+                }
+                
+                .pagination {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 1px solid var(--light-gray);
+                }
+                
+                .pagination-controls {
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+                }
+                
+                .pagination-btn {
+                    width: 40px;
+                    height: 40px;
+                    border: 2px solid var(--light-gray);
+                    background: white;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: var(--transition);
+                }
+                
+                .pagination-btn:hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                }
+                
+                .pagination-btn.active {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                }
+                
+                .pagination-btn.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+                
+                .pagination-btn.disabled:hover {
+                    border-color: var(--light-gray);
+                    color: inherit;
+                }
+                
+                .pagination-size select {
+                    padding: 10px 15px;
+                    border: 2px solid var(--light-gray);
+                    border-radius: 8px;
+                    font-family: 'Poppins', sans-serif;
+                }
+                
+                .stat-card.info {
+                    border-left-color: var(--info-color);
+                }
+                
+                .stat-card.info .stat-icon {
+                    background: rgba(30, 144, 255, 0.1);
+                    color: var(--info-color);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

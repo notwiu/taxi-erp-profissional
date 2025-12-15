@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veículos | TaxiControl PRO</title>
+    <link rel="stylesheet" href="/back/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-taxi"></i>
+                <h2>TaxiControl<span>PRO</span></h2>
+            </div>
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <h3>Administrador</h3>
+                    <p>Supervisor Geral</p>
+                </div>
+            </div>
+            
+            <ul class="menu-items">
+                <li class="menu-item">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="corridas.html">
+                        <i class="fas fa-route"></i>
+                        <span>Corridas</span>
+                        <span class="badge">12</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="motoristas.html">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Motoristas</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="veiculos.html">
+                        <i class="fas fa-car"></i>
+                        <span>Veículos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="financeiro.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Financeiro</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#"><i class="fas fa-users-cog"></i> Usuários</a></li>
+                        <li><a href="#"><i class="fas fa-percentage"></i> Comissões</a></li>
+                        <li><a href="#"><i class="fas fa-gas-pump"></i> Combustível</a></li>
+                        <li><a href="#"><i class="fas fa-tools"></i> Manutenção</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>Sistema Online</span>
+                </div>
+                <button class="btn-logout" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 class="page-title">Gestão de Veículos</h1>
+                <nav class="breadcrumb">
+                    <a href="dashboard.html">Home</a> / <span>Veículos</span>
+                </nav>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+                <div class="date-time">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-bar-left">
+                <button class="btn-primary" onclick="showNewVehicleModal()">
+                    <i class="fas fa-car-side"></i> Novo Veículo
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-tools"></i> Manutenção
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-gas-pump"></i> Abastecimento
+                </button>
+            </div>
+            <div class="action-bar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar veículo..." id="search-vehicles">
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Stats -->
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Veículos</h3>
+                    <p class="stat-value">24</p>
+                    <p class="stat-change">
+                        18 ativos / 2 manutenção
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-road"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Km Rodados (Média)</h3>
+                    <p class="stat-value">1.245 km</p>
+                    <p class="stat-change">
+                        127 corridas hoje
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-oil-can"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Custo Manutenção</h3>
+                    <p class="stat-value">R$ 3.850,00</p>
+                    <p class="stat-change">
+                        Este mês
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stat-card info">
+                <div class="stat-icon">
+                    <i class="fas fa-gas-pump"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Consumo Médio</h3>
+                    <p class="stat-value">10,2 km/L</p>
+                    <p class="stat-change">
+                        Economia de 8%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicles Table -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> Frota de Veículos</h3>
+                <div class="view-filters">
+                    <select class="status-filter">
+                        <option value="all">Todos os status</option>
+                        <option value="active">Ativos</option>
+                        <option value="maintenance">Em manutenção</option>
+                        <option value="inactive">Inativos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Placa</th>
+                                <th>Modelo</th>
+                                <th>Motorista</th>
+                                <th>Status</th>
+                                <th>Km Atual</th>
+                                <th>Próxima Manutenção</th>
+                                <th>Última Corrida</th>
+                                <th>Rendimento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Veículo 1 - Ativo -->
+                            <tr>
+                                <td>
+                                    <div class="vehicle-plate">
+                                        <i class="fas fa-car"></i>
+                                        <strong>ABC-1234</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-model">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car-side"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Toyota Corolla</strong>
+                                            <small>2022 • Prata</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar small">JS</div>
+                                        <span>João Silva</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Ativo</span>
+                                </td>
+                                <td class="km-info">
+                                    <div class="km-value">45.280 km</div>
+                                    <div class="km-progress">
+                                        <div class="progress-bar" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="maintenance-info">
+                                        <i class="fas fa-tools"></i>
+                                        <span>50.000 km</span>
+                                        <small>em 4.720 km</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="last-ride">
+                                        <i class="fas fa-route"></i>
+                                        <div>
+                                            <strong>15:30</strong>
+                                            <small>Centro → Aeroporto</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="revenue-info success">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>R$ 450,00</strong>
+                                            <small>hoje</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Manutenção">
+                                            <i class="fas fa-tools"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Abastecer">
+                                            <i class="fas fa-gas-pump"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Desativar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Veículo 2 - Ativo -->
+                            <tr>
+                                <td>
+                                    <div class="vehicle-plate">
+                                        <i class="fas fa-car"></i>
+                                        <strong>DEF-5678</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-model">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car-side"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Honda Civic</strong>
+                                            <small>2021 • Preto</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar small">MS</div>
+                                        <span>Maria Santos</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Ativo</span>
+                                </td>
+                                <td class="km-info">
+                                    <div class="km-value">38.750 km</div>
+                                    <div class="km-progress">
+                                        <div class="progress-bar" style="width: 45%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="maintenance-info">
+                                        <i class="fas fa-tools"></i>
+                                        <span>40.000 km</span>
+                                        <small>em 1.250 km</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="last-ride">
+                                        <i class="fas fa-route"></i>
+                                        <div>
+                                            <strong>14:15</strong>
+                                            <small>Shopping → Nova Vida</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="revenue-info success">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>R$ 380,00</strong>
+                                            <small>hoje</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Manutenção">
+                                            <i class="fas fa-tools"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Abastecer">
+                                            <i class="fas fa-gas-pump"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Desativar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Veículo 3 - Manutenção -->
+                            <tr class="maintenance-row">
+                                <td>
+                                    <div class="vehicle-plate">
+                                        <i class="fas fa-car"></i>
+                                        <strong>GHI-9012</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-model">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car-side"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Chevrolet Onix</strong>
+                                            <small>2023 • Branco</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar small">CO</div>
+                                        <span>Carlos Oliveira</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge maintenance">Manutenção</span>
+                                </td>
+                                <td class="km-info">
+                                    <div class="km-value">32.150 km</div>
+                                    <div class="km-progress">
+                                        <div class="progress-bar" style="width: 85%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="maintenance-info warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <div>
+                                            <strong>EM MANUTENÇÃO</strong>
+                                            <small>Troca de óleo</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="last-ride">
+                                        <i class="fas fa-clock"></i>
+                                        <div>
+                                            <strong>13:45</strong>
+                                            <small>Hospital → Centro</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="revenue-info">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>R$ 320,00</strong>
+                                            <small>hoje</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn warning" title="Finalizar Manutenção">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Histórico">
+                                            <i class="fas fa-history"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Veículo 4 - Disponível -->
+                            <tr>
+                                <td>
+                                    <div class="vehicle-plate">
+                                        <i class="fas fa-car"></i>
+                                        <strong>JKL-3456</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-model">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car-side"></i>
+                                        </div>
+                                        <div>
+                                            <strong>VW Voyage</strong>
+                                            <small>2020 • Vermelho</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <span class="no-driver">Sem motorista</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge available">Disponível</span>
+                                </td>
+                                <td class="km-info">
+                                    <div class="km-value">28.900 km</div>
+                                    <div class="km-progress">
+                                        <div class="progress-bar" style="width: 30%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="maintenance-info">
+                                        <i class="fas fa-tools"></i>
+                                        <span>35.000 km</span>
+                                        <small>em 6.100 km</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="last-ride">
+                                        <i class="fas fa-clock"></i>
+                                        <div>
+                                            <strong>12:30</strong>
+                                            <small>Estação → Universidade</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="revenue-info">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>R$ 280,00</strong>
+                                            <small>hoje</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Atribuir Motorista">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Manutenção">
+                                            <i class="fas fa-tools"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Veículo 5 - Ativo -->
+                            <tr>
+                                <td>
+                                    <div class="vehicle-plate">
+                                        <i class="fas fa-car"></i>
+                                        <strong>MNO-7890</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-model">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car-side"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Fiat Argo</strong>
+                                            <small>2022 • Azul</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-cell">
+                                        <div class="driver-avatar small">AP</div>
+                                        <span>Ana Pereira</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge active">Ativo</span>
+                                </td>
+                                <td class="km-info">
+                                    <div class="km-value">41.200 km</div>
+                                    <div class="km-progress">
+                                        <div class="progress-bar" style="width: 60%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="maintenance-info">
+                                        <i class="fas fa-tools"></i>
+                                        <span>45.000 km</span>
+                                        <small>em 3.800 km</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="last-ride">
+                                        <i class="fas fa-route"></i>
+                                        <div>
+                                            <strong>11:15</strong>
+                                            <small>Hotel → Shopping</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="revenue-info success">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>R$ 220,00</strong>
+                                            <small>hoje</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-actions-cell">
+                                        <button class="table-action-btn" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Manutenção">
+                                            <i class="fas fa-tools"></i>
+                                        </button>
+                                        <button class="table-action-btn" title="Abastecer">
+                                            <i class="fas fa-gas-pump"></i>
+                                        </button>
+                                        <button class="table-action-btn danger" title="Desativar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Maintenance Alert -->
+                <div class="maintenance-alert warning">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="alert-content">
+                        <h4>Manutenções Pendentes</h4>
+                        <p>2 veículos necessitam de manutenção nos próximos 1.000 km</p>
+                    </div>
+                    <button class="btn-secondary">
+                        <i class="fas fa-tools"></i> Agendar Todas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>TaxiControl PRO v2.1.0 | Sistema ERP para Gestão de Frota de Táxis</p>
+            <p>© 2024 Todos os direitos reservados</p>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/back/script.js"></script>
+    <script>
+        // Função para mostrar modal de novo veículo
+        function showNewVehicleModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-car-side"></i> Novo Veículo</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="new-vehicle-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-car"></i> Placa</label>
+                                    <input type="text" placeholder="ABC-1234" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-car"></i> Modelo</label>
+                                    <input type="text" placeholder="Toyota Corolla" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt"></i> Ano</label>
+                                    <input type="number" placeholder="2023" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-palette"></i> Cor</label>
+                                    <input type="text" placeholder="Prata" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-tachometer-alt"></i> Km Atual</label>
+                                    <input type="number" placeholder="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card"></i> Renavam</label>
+                                    <input type="text" placeholder="Número do Renavam">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card"></i> Chassi</label>
+                                    <input type="text" placeholder="Número do Chassi">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-gas-pump"></i> Combustível</label>
+                                    <select required>
+                                        <option value="gasolina">Gasolina</option>
+                                        <option value="etanol">Etanol</option>
+                                        <option value="flex">Flex</option>
+                                        <option value="diesel">Diesel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-user-tie"></i> Motorista</label>
+                                    <select>
+                                        <option value="">Sem motorista atribuído</option>
+                                        <option value="1">João Silva</option>
+                                        <option value="2">Maria Santos</option>
+                                        <option value="3">Carlos Oliveira</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-sticky-note"></i> Observações</label>
+                                <textarea placeholder="Observações adicionais..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox" checked>
+                                    <span>Veículo ativo imediatamente</span>
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                        <button class="btn-primary" onclick="saveNewVehicle()">
+                            <i class="fas fa-save"></i> Salvar Veículo
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Fechar modal
+            modal.querySelector('.modal-close').addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+        }
+
+        // Salvar novo veículo
+        function saveNewVehicle() {
+            const form = document.getElementById('new-vehicle-form');
+            if (form.checkValidity()) {
+                const loading = showLoading('Salvando veículo...');
+                
+                setTimeout(() => {
+                    loading.hide();
+                    closeModal();
+                    showAlert('Veículo cadastrado com sucesso!', 'success');
+                }, 1500);
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Adicionar estilos específicos para veículos
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .vehicle-plate {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 1.1rem;
+                }
+                
+                .vehicle-plate i {
+                    color: var(--primary-color);
+                }
+                
+                .vehicle-model {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+                
+                .vehicle-icon {
+                    width: 40px;
+                    height: 40px;
+                    background: var(--light-gray);
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--primary-color);
+                    font-size: 1.2rem;
+                }
+                
+                .driver-avatar.small {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background: var(--primary-color);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                }
+                
+                .no-driver {
+                    color: var(--gray-color);
+                    font-style: italic;
+                }
+                
+                .status-badge {
+                    padding: 5px 12px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    display: inline-block;
+                }
+                
+                .status-badge.active {
+                    background: rgba(46, 213, 115, 0.1);
+                    color: var(--success-color);
+                }
+                
+                .status-badge.maintenance {
+                    background: rgba(255, 159, 67, 0.1);
+                    color: var(--warning-color);
+                }
+                
+                .status-badge.available {
+                    background: rgba(30, 144, 255, 0.1);
+                    color: var(--info-color);
+                }
+                
+                .km-info {
+                    min-width: 150px;
+                }
+                
+                .km-value {
+                    font-weight: 600;
+                    margin-bottom: 5px;
+                }
+                
+                .km-progress {
+                    height: 6px;
+                    background: var(--light-gray);
+                    border-radius: 3px;
+                    overflow: hidden;
+                }
+                
+                .progress-bar {
+                    height: 100%;
+                    background: var(--primary-color);
+                    border-radius: 3px;
+                }
+                
+                .maintenance-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .maintenance-info i {
+                    color: var(--primary-color);
+                }
+                
+                .maintenance-info.warning i {
+                    color: var(--warning-color);
+                }
+                
+                .last-ride, .revenue-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .last-ride i, .revenue-info i {
+                    color: var(--gray-color);
+                }
+                
+                .revenue-info.success i {
+                    color: var(--success-color);
+                }
+                
+                .last-ride strong, .revenue-info strong {
+                    display: block;
+                    font-size: 1rem;
+                }
+                
+                .last-ride small, .revenue-info small {
+                    font-size: 0.8rem;
+                    color: var(--gray-color);
+                }
+                
+                .maintenance-row {
+                    background: rgba(255, 159, 67, 0.05);
+                }
+                
+                .maintenance-alert {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    padding: 20px;
+                    background: rgba(255, 159, 67, 0.1);
+                    border-radius: var(--border-radius-sm);
+                    margin-top: 30px;
+                    border-left: 4px solid var(--warning-color);
+                }
+                
+                .maintenance-alert.warning .alert-icon {
+                    color: var(--warning-color);
+                }
+                
+                .alert-icon {
+                    font-size: 1.8rem;
+                }
+                
+                .alert-content {
+                    flex: 1;
+                }
+                
+                .alert-content h4 {
+                    margin-bottom: 5px;
+                    color: var(--dark-color);
+                }
+                
+                .alert-content p {
+                    color: var(--gray-color);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

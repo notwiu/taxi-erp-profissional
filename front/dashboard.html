@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TaxiPro ERP</title>
+    <link rel="stylesheet" href="/back/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page">
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="taxi-animation">
+                <div class="taxi">
+                    <i class="fas fa-taxi"></i>
+                </div>
+                <div class="road">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <p class="loading-text">Carregando dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="brand">
+                <div class="brand-icon">
+                    <i class="fas fa-taxi"></i>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-name">Taxi<span>Pro</span></div>
+                    <div class="brand-version">v3.0.0</div>
+                </div>
+            </a>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-title">Principal</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="dashboard.html" class="menu-link active">
+                            <div class="menu-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="menu-text">Dashboard</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="corridas.html" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-route"></i>
+                            </div>
+                            <div class="menu-text">Corridas</div>
+                            <div class="menu-badge">12</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="motoristas.html" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="menu-text">Motoristas</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="veiculos.html" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="menu-text">Veículos</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Financeiro</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="financeiro.html" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="menu-text">Financeiro</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="relatorios.html" class="menu-link">
+                            <div class="menu-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="menu-text">Relatórios</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">Configurações</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showModal('Configurações', '<p>Configurações do sistema</p>')">
+                            <div class="menu-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="menu-text">Configurações</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="showModal('Ajuda', '<p>Central de ajuda</p>')">
+                            <div class="menu-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="menu-text">Ajuda</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+                <div class="user-name">Administrador</div>
+                <div class="user-role">Supervisor Geral</div>
+            </div>
+            <button class="logout-btn" title="Sair">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <h1 class="page-title">Dashboard</h1>
+                <nav class="breadcrumb">
+                    <a href="dashboard.html">Home</a>
+                    <span class="separator">/</span>
+                    <span>Dashboard</span>
+                </nav>
+            </div>
+
+            <div class="header-right">
+                <div class="header-action">
+                    <button class="action-btn" title="Notificações" onclick="taxiPro.showNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="action-btn" title="Relatório Rápido" onclick="generateDailyReport()">
+                        <i class="fas fa-file-alt"></i>
+                    </button>
+                    <button class="action-btn" title="Exportar Dados" onclick="quickAction('export-data')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="datetime-display">
+                    <div class="datetime-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="current-date"></span>
+                    </div>
+                    <div class="datetime-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Quick Actions -->
+            <div class="quick-actions mb-5">
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn btn-primary" onclick="quickAction('new-ride')">
+                        <i class="fas fa-plus-circle"></i> Nova Corrida
+                    </button>
+                    <button class="btn btn-secondary" onclick="quickAction('new-driver')">
+                        <i class="fas fa-user-plus"></i> Novo Motorista
+                    </button>
+                    <button class="btn btn-secondary" onclick="quickAction('new-vehicle')">
+                        <i class="fas fa-car"></i> Novo Veículo
+                    </button>
+                    <button class="btn btn-secondary" onclick="quickAction('new-expense')">
+                        <i class="fas fa-file-invoice-dollar"></i> Nova Despesa
+                    </button>
+                    <button class="btn btn-outline" onclick="quickAction('daily-report')">
+                        <i class="fas fa-print"></i> Relatório Diário
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid mb-5">
+                <div class="stat-card primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">Faturamento Total</div>
+                        <div class="stat-value" id="total-revenue">R$ 45.280,00</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 15% vs mês anterior
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">Corridas Hoje</div>
+                        <div class="stat-value" id="today-rides">47</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 8% vs ontem
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">Motoristas Ativos</div>
+                        <div class="stat-value" id="active-drivers">22/28</div>
+                        <div class="stat-change">
+                            6 em folga hoje
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">Veículos Ativos</div>
+                        <div class="stat-value" id="active-vehicles">18/24</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i> 2 em manutenção
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="dashboard-grid mb-5">
+                <!-- Revenue Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Faturamento Diário</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-secondary">
+                                <i class="fas fa-filter"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rides Distribution -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Distribuição de Corridas</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="ridesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Rides -->
+            <div class="card mb-5">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-clock"></i>
+                        <span>Corridas Recentes</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="corridas.html" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-list"></i> Ver Todas
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Motorista</th>
+                                    <th>Veículo</th>
+                                    <th>Trajeto</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Horário</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#00128</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.875rem;">JS</div>
+                                            <span>João Silva</span>
+                                        </div>
+                                    </td>
+                                    <td>ABC-1234</td>
+                                    <td>Centro → Aeroporto</td>
+                                    <td class="text-success">R$ 45,00</td>
+                                    <td><span class="badge badge-success">Concluída</span></td>
+                                    <td>15:30</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#00127</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.875rem; background: #4ade80;">MS</div>
+                                            <span>Maria Santos</span>
+                                        </div>
+                                    </td>
+                                    <td>DEF-5678</td>
+                                    <td>Shopping → Nova Vida</td>
+                                    <td class="text-success">R$ 32,50</td>
+                                    <td><span class="badge badge-success">Concluída</span></td>
+                                    <td>14:15</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#00126</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.875rem; background: #f59e0b;">CO</div>
+                                            <span>Carlos Oliveira</span>
+                                        </div>
+                                    </td>
+                                    <td>GHI-9012</td>
+                                    <td>Hospital → Centro</td>
+                                    <td class="text-success">R$ 28,00</td>
+                                    <td><span class="badge badge-success">Concluída</span></td>
+                                    <td>13:45</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#00125</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.875rem; background: #3b82f6;">PC</div>
+                                            <span>Pedro Costa</span>
+                                        </div>
+                                    </td>
+                                    <td>JKL-3456</td>
+                                    <td>Estação → Universidade</td>
+                                    <td class="text-success">R$ 19,50</td>
+                                    <td><span class="badge badge-success">Concluída</span></td>
+                                    <td>12:30</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#00129</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.875rem; background: #8b5cf6;">RS</div>
+                                            <span>Roberto Souza</span>
+                                        </div>
+                                    </td>
+                                    <td>PQR-1234</td>
+                                    <td>Aeroporto → Centro</td>
+                                    <td class="text-warning">R$ 45,00</td>
+                                    <td><span class="badge badge-warning">Em andamento</span></td>
+                                    <td>16:00</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="btn btn-sm btn-success">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fleet Status -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-car"></i>
+                        <span>Status da Frota</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="veiculos.html" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-car"></i> Ver Frota
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Vehicle 1 -->
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">ABC-1234</div>
+                                    <div class="text-sm text-gray-600">Toyota Corolla</div>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="badge badge-success">Ativo</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Motorista:</span>
+                                    <span class="font-medium">João Silva</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">KM Atual:</span>
+                                    <span class="font-medium">45.280 km</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Próxima Manut.:</span>
+                                    <span class="font-medium">4.720 km</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 2 -->
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 bg-success rounded-lg flex items-center justify-center text-white">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">DEF-5678</div>
+                                    <div class="text-sm text-gray-600">Honda Civic</div>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="badge badge-success">Ativo</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Motorista:</span>
+                                    <span class="font-medium">Maria Santos</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">KM Atual:</span>
+                                    <span class="font-medium">38.750 km</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Próxima Manut.:</span>
+                                    <span class="font-medium">1.250 km</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle 3 -->
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 bg-warning rounded-lg flex items-center justify-center text-white">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">GHI-9012</div>
+                                    <div class="text-sm text-gray-600">Chevrolet Onix</div>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="badge badge-warning">Manutenção</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Motorista:</span>
+                                    <span class="font-medium">Carlos Oliveira</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">KM Atual:</span>
+                                    <span class="font-medium">32.150 km</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Status:</span>
+                                    <span class="font-medium text-warning">Troca de óleo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>© 2024 TaxiPro ERP - Sistema Profissional de Gestão para Frotas de Táxi</p>
+            <p>Sistema v3.0.0 | Todos os direitos reservados</p>
+        </footer>
+    </div>
+
+    <script src="/back/script.js"></script>
+</body>
+</html>
